@@ -135,7 +135,7 @@ textarea.form-control {
 .blog img {
   display: flex; /* Use flexbox for layout */
   flex-direction: column; /* Arrange items in a column */
-  height: 400px; /* Set height */
+  height: 500px; /* Set height */
   width: 100%; /* Set width */
 }
 
