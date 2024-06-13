@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog App</title>
+  <link rel="stylesheet" href="/public/style.css"> <!-- Link to external CSS file for styling -->
+</head>
+<body>
+  <header>
+    <h1>Blog App</h1> <!-- Main header of the blog app -->
+  </header>
+  <div class="container">
+    <div class="blog-container">
+      <h2 class="create-blog">Create a New Blog</h2>
+      <div class="form-container">
+        <form id="blog-form"> <!-- Form to create a new blog -->
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" class="form-control" placeholder="Title" required> <!-- Input for blog title -->
+            <label for="imgUrl">Image Url</label>
+            <input type="text" id="imgUrl" class="form-control" placeholder="Paste your Image Url" required> <!-- Input for image URL -->
+          </div>
+          <div class="form-group">
+            <label for="content">Content</label>
+            <textarea id="content" class="form-control" placeholder="Content" required></textarea> <!-- Textarea for blog content -->
+          </div>
+          <div class="button">
+              <button type="submit" class="btn">Post Blog</button> <!-- Submit button to post the blog -->
+          </div>
+        </form>
+      </div>
+      <div class="all-blogs">
+          <h2>All Blogs</h2>
+      </div>
+      <div id="blogs-container"></div> <!-- Container to display all blogs -->
+    </div>
+  </div>
+
+  <!-- Modal for editing blog -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn">&times;</span> <!-- Close button for the modal -->
+      <form id="edit-form"> <!-- Form to edit an existing blog -->
+        <h2>Edit Blog</h2>
+        <div class="form-group">
+          <label for="edit-title">Title</label>
+          <input type="text" id="edit-title" class="form-control" required> <!-- Input for editing the title -->
+        </div>
+        <div class="form-group">
+          <label for="edit-imgUrl">Image Url</label>
+          <input type="text" id="edit-imgUrl" class="form-control" required> <!-- Input for editing the image URL -->
+        </div>
+        <div class="form-group">
+          <label for="edit-content">Content</label>
+          <textarea id="edit-content" class="form-control" required></textarea> <!-- Textarea for editing the content -->
+        </div>
+        <div class="button">
+            <button type="submit" class="btn">Update Blog</button> <!-- Submit button to update the blog -->
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let currentEditId = null; // Variable to store the current blog ID being edited
+
+    // Function to fetch and display all blogs
+    async function fetchBlogs() {
+      const response = await fetch('http://localhost:3000/api/blogs');
+      const blogs = await response.json();
+      const container = document.getElementById('blogs-container');
+      container.innerHTML = ''; // Clear the container
+
+      blogs.forEach(blog => {
+        const blogDiv = document.createElement('div');
+        blogDiv.className = 'blog';
+        blogDiv.innerHTML = `<h2>${blog.title}</h2><p>${blog.content}</p><img src=${blog.imgUrl} alt=""><small>Posted on : ${new Date(blog.date).toLocaleString()}</small><div class="button2"><button class="edit-btn" onclick="openEditModal('${blog._id}', '${blog.title}', '${blog.content}', '${blog.imgUrl}')">Edit</button>
+    <button class="delete-btn" onclick="deleteBlog('${blog._id}')">Delete</button></div>`;
+        container.appendChild(blogDiv); // Append each blog to the container
+      });
+    }
+
+    // Function to validate the image URL
+    function isValidImageUrl(url) {
+      return (url.match(/\.(jpeg|jpg|gif|png)$/) != null); // Check if URL ends with valid image extensions
+    }
+
+    // Function to create a new blog
+    async function createBlog(e) {
+      e.preventDefault();
+      const title = document.getElementById('title').value;
+      const content = document.getElementById('content').value;
+      const imgUrl = document.getElementById('imgUrl').value;
+
+      if (!isValidImageUrl(imgUrl)) {
+        alert('Please enter a valid image URL.'); // Alert if image URL is invalid
+        return;
+      }
+
+      const response = await fetch('http://localhost:3000/api/blogs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ title, content, imgUrl }) // Send blog data to server
+      });
+
+      if (response.ok) {
+        document.getElementById('title').value = ''; // Clear input fields
+        document.getElementById('content').value = '';
+        document.getElementById('imgUrl').value = '';
+        fetchBlogs(); // Refresh the blog list
+      } else {
+        console.error('Failed to create blog:', response.statusText);
+      }
+    }
+
+    // Function to open the edit modal with current blog data
+    function openEditModal(id, title, content, imgUrl) {
+      currentEditId = id; // Set current edit ID
+      document.getElementById('edit-title').value = title; // Populate form with current data
+      document.getElementById('edit-content').value = content;
+      document.getElementById('edit-imgUrl').value = imgUrl;
+      document.getElementById('editModal').style.display = 'block'; // Show the modal
+    }
+
+    // Function to edit an existing blog
+    async function editBlog(e) {
+      e.preventDefault();
+      const title = document.getElementById('edit-title').value;
+      const content = document.getElementById('edit-content').value;
+      const imgUrl = document.getElementById('edit-imgUrl').value;
+
+      if (!isValidImageUrl(imgUrl)) {
+        alert('Please enter a valid image URL.'); // Alert if image URL is invalid
+        return;
+      }
+
+      if (currentEditId) {
+        const response = await fetch(`http://localhost:3000/api/blogs/${currentEditId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ title, content, imgUrl }) // Send updated blog data to server
+        });
+
+        if (response.ok) {
+          fetchBlogs(); // Refresh the blog list
+          closeModal(); // Close the modal
+        } else {
+          console.error('Failed to update blog:', response.statusText);
+        }
+      }
+    }
+
+    // Function to delete a blog
+    async function deleteBlog(id) {
+      const response = await fetch(`http://localhost:3000/api/blogs/${id}`, {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        fetchBlogs(); // Refresh the blog list
+      } else {
+        console.error('Failed to delete blog:', response.statusText);
+      }
+    }
+
+    // Function to close the edit modal
+    function closeModal() {
+      document.getElementById('editModal').style.display = 'none'; // Hide the modal
+      currentEditId = null; // Clear the current edit ID
+    }
+
+    // Event listeners
+    document.getElementById('blog-form').addEventListener('submit', createBlog); // Submit event for creating a blog
+    document.getElementById('edit-form').addEventListener('submit', editBlog); // Submit event for editing a blog
+    document.querySelector('.close-btn').addEventListener('click', closeModal); // Click event for closing the modal
+
+    window.onload = fetchBlogs; // Fetch blogs on page load
+
+    // Close modal if clicking outside of it
+    window.onclick = function(event) {
+      if (event.target === document.getElementById('editModal')) {
+        closeModal();
+      }
+    }
+  </script>
+</body>
+</html>
