@@ -4,7 +4,239 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blog App</title>
-  <link rel="stylesheet" href="/public/style.css"> <!-- Link to external CSS file for styling -->
+  <!-- <link rel="stylesheet" href="/public/style.css"> Link to external CSS file for styling -->
+  <style>
+    
+    /* Basic styles for the body of the page */
+body {
+  font-family: Arial, sans-serif; /* Set the font for the entire page */
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+  background: #f4f4f4; /* Set background color */
+}
+
+/* Styles for the header */
+header {
+  background: #333; /* Set background color */
+  color: #fff; /* Set text color */
+  padding: 1em 0; /* Add padding */
+  text-align: center; /* Center-align the text */
+}
+
+/* Container for the main content */
+.container {
+  max-width: 800px; /* Set maximum width */
+  margin: 20px auto; /* Center the container with margin */
+  padding: 20px; /* Add padding */
+  background: #fff; /* Set background color */
+  border-radius: 5px; /* Round the corners */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a shadow */
+}
+
+/* Styles for the blog container */
+.blog-container {
+  margin-bottom: 20px; /* Add margin at the bottom */
+}
+
+/* Styles for the create blog heading */
+.blog-container .create-blog {
+  text-align: center; /* Center-align the text */
+  font-size: 34px; /* Set font size */
+  font-weight: 800; /* Set font weight */
+}
+
+/* Container for the form */
+.form-container {
+  margin-bottom: 20px; /* Add margin at the bottom */
+}
+
+/* Group styles for form elements */
+.form-group {
+  margin: 15px; /* Add margin */
+  font-size: larger; /* Set font size */
+  font-weight: bold; /* Set font weight */
+}
+
+/* Label styles within the form group */
+.form-group label {
+  display: block; /* Make labels block elements */
+  margin-bottom: 5px; /* Add margin at the bottom */
+  margin-top: 15px; /* Add margin at the top */
+}
+
+/* Styles for form controls */
+.form-control {
+  width: 100%; /* Make controls full width */
+  padding: 10px; /* Add padding */
+  box-sizing: border-box; /* Include padding in the element's total width and height */
+}
+
+/* Special height for textarea form controls */
+textarea.form-control {
+  height: 100px; /* Set height */
+}
+
+/* Styles for the all blogs section */
+.all-blogs {
+  height: 50px; /* Set height */
+  width: 100%; /* Set width */
+  display: flex; /* Use flexbox for layout */
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+  text-align: center; /* Center-align text */
+  background-color: #333; /* Set background color */
+  color: #ddd; /* Set text color */
+  margin-bottom: 10px; /* Add margin at the bottom */
+}
+
+/* Styles for the button container */
+.button {
+  display: flex; /* Use flexbox for layout */
+  justify-content: end; /* Align items to the end */
+  margin: 15px; /* Add margin */
+}
+
+/* Styles for buttons */
+.btn {
+  background-color: #333; /* Set background color */
+  color: #fff; /* Set text color */
+  padding: 10px 15px; /* Add padding */
+  border-radius: 5px; /* Round the corners */
+  font-size: larger; /* Set font size */
+  font-weight: 600; /* Set font weight */
+  cursor: pointer; /* Change cursor on hover */
+  display: inline-block; /* Make button inline block */
+}
+
+/* Styles for secondary button container */
+.button2 {
+  display: flex; /* Use flexbox for layout */
+  justify-content: space-between; /* Space items evenly */
+  margin-top: 10px; /* Add margin at the top */
+}
+
+/* Hover effect for buttons */
+.btn:hover {
+  background-color: #555; /* Change background color on hover */
+}
+
+/* Styles for individual blog posts */
+.blog {
+  border-bottom: 1px solid #ddd; /* Add bottom border */
+  padding-bottom: 10px; /* Add padding at the bottom */
+  margin-bottom: 10px; /* Add margin at the bottom */
+}
+
+/* Remove bottom border for the last blog */
+.blog:last-child {
+  border: none; /* Remove border */
+}
+
+/* Styles for blog titles */
+.blog h2 {
+  margin-top: 25px; /* Add margin at the top */
+  padding-bottom: 5px; /* Add padding at the bottom */
+  font-size: 30px; /* Set font size */
+  font-weight: 800; /* Set font weight */
+}
+
+/* Styles for blog images */
+.blog img {
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column; /* Arrange items in a column */
+  height: 500px; /* Set height */
+  width: 100%; /* Set width */
+}
+
+/* Styles for blog content */
+.blog p {
+  margin: 10px 0; /* Add vertical margin */
+  font-size: x-large; /* Set font size */
+}
+
+/* Styles for edit buttons */
+.edit-btn {
+  height: 30px; /* Set height */
+  width: 80px; /* Set width */
+  background-color: #4CAF50; /* Set background color */
+  color: white; /* Set text color */
+  font-size: large; /* Set font size */
+  border: 1px solid black; /* Add border */
+  border-radius: 5px; /* Round the corners */
+  cursor: pointer; /* Change cursor on hover */
+}
+
+/* Styles for blog metadata */
+.blog small {
+  font-size: large; /* Set font size */
+  color: #050505; /* Set text color */
+}
+
+/* Hover effect for edit buttons */
+.edit-btn:hover {
+  background-color: #45a049; /* Change background color on hover */
+}
+
+/* Styles for delete buttons */
+.delete-btn {
+  height: 30px; /* Set height */
+  width: 80px; /* Set width */
+  background-color: #f44336; /* Set background color */
+  color: white; /* Set text color */
+  font-size: large; /* Set font size */
+  border: 1px solid black; /* Add border */
+  border-radius: 5px; /* Round the corners */
+  cursor: pointer; /* Change cursor on hover */
+}
+
+/* Hover effect for delete buttons */
+.delete-btn:hover {
+  background-color: #da190b; /* Change background color on hover */
+}
+
+/* Modal styles */
+.modal {
+  display: none; /* Hide modal by default */
+  position: fixed; /* Fix position */
+  z-index: 1; /* Place on top */
+  left: 0; /* Align to the left */
+  top: 0; /* Align to the top */
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scrolling */
+  background-color: rgb(0,0,0); /* Set background color */
+  background-color: rgba(0,0,0,0.4); /* Add transparency */
+}
+
+/* Modal content styles */
+.modal-content {
+  background-color: #fefefe; /* Set background color */
+  margin: 15% auto; /* Center horizontally */
+  padding: 20px; /* Add padding */
+  border: 1px solid #888; /* Add border */
+  border-radius: 15px; /* Round the corners */
+  width: 40%; /* Set width */
+}
+
+/* Close button styles */
+.close-btn {
+  color: #aaa; /* Set text color */
+  float: right; /* Align to the right */
+  font-size: 28px; /* Set font size */
+  font-weight: bold; /* Set font weight */
+  background-color: #4caf4f00; /* Set background color */
+}
+
+/* Hover and focus effect for close button */
+.close-btn:hover,
+.close-btn:focus {
+  color: rgb(250, 6, 6); /* Change text color on hover/focus */
+  text-decoration: none; /* Remove text decoration */
+  cursor: pointer; /* Change cursor on hover */
+}
+
+
+  </style>
 </head>
 <body>
   <header>
